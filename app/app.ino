@@ -167,19 +167,11 @@ IOTHUBMESSAGE_DISPOSITION_RESULT receiveMessageCallback(IOTHUB_MESSAGE_HANDLE me
     else
     {
         /*buffer is not zero terminated*/
-        char *temp = (char *)malloc(size + 1);
-        if (temp == NULL)
-        {
-            LogInfo("failed to malloc\r\n");
-            result = IOTHUBMESSAGE_REJECTED;
-        }
-        else
-        {
-            memcpy(temp, buffer, size);
-            temp[size] = '\0';
-            LogInfo("Receiving message: %s", temp);
-            result = IOTHUBMESSAGE_ACCEPTED;
-        }
+        char temp[size + 1];
+        memcpy(temp, buffer, size);
+        temp[size] = '\0';
+        LogInfo("Receiving message: %s", temp);
+        result = IOTHUBMESSAGE_ACCEPTED;
     }
 
     return result;
