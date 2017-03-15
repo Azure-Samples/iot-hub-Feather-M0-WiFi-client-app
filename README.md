@@ -11,9 +11,12 @@ Follow [this page](https://learn.adafruit.com/adafruit-feather-m0-wifi-atwinc150
 ## Install libraries
 Install the following libraries from `Sketch -> Include library -> Manage libraries`
 
+* Adafruit_WINC1500
+* RTCZero
+* NTPClient
 * AzureIoTHub
 * AzureIoTUtility
-* AzureIoTProtocol_MQTT
+* AzureIoTProtocol_HTTP
 * ArduinoJson
 * Adafruit BME280 Library
 * Adafruit Unified Sensor
