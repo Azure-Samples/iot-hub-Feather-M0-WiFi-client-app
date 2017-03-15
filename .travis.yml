@@ -1,0 +1,38 @@
+# Copyright (c) Microsoft. All rights reserved.
+# Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
+language: generic
+env:
+  global:
+    - IDE_VERSION=1.6.8
+  matrix:
+    - BOARD="adafruit:samd:adafruit_feather_m0"
+before_install:
+  - /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_1.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :1 -ac -screen 0 1280x1024x16
+  - sleep 3
+  - export DISPLAY=:1.0
+  - wget http://downloads.arduino.cc/arduino-$IDE_VERSION-linux64.tar.xz
+  - tar xf arduino-$IDE_VERSION-linux64.tar.xz
+  - mv arduino-$IDE_VERSION $HOME/arduino-ide
+  - export PATH=$PATH:$HOME/arduino-ide
+  - arduino --pref "boardsmanager.additional.urls=https://adafruit.github.io/arduino-board-index/package_adafruit_index.json" --install-boards adafruit:samd
+  - arduino --pref "boardsmanager.additional.urls=" --save-prefs
+  - git clone https://github.com/arduino-libraries/RTCZero.git /home/travis/Arduino/libraries/RTCZero
+  - arduino --install-library NTPClient
+  - git clone https://github.com/adafruit/Adafruit_WINC1500.git /home/travis/Arduino/libraries/Adafruit_WINC1500
+  - buildExampleSketch() {
+      EXAMPLE_SKETCH=$PWD/$1/$1.ino;
+      arduino --verbose-build --verify --board $BOARD $EXAMPLE_SKETCH;
+    }
+install:
+  - arduino --install-library "AzureIoTUtility"
+  - arduino --install-library "AzureIoTHub"
+  - arduino --install-library "AzureIoTProtocol_HTTP"
+  - arduino --install-library "ArduinoJson"
+  - arduino --install-library "Adafruit BME280 Library"
+  - arduino --install-library "Adafruit Unified Sensor"
+  # a slash bug in the arduino IoT lib
+  - sed -i -e 's/azure_c_shared_utility\\crt_abstractions.h/azure_c_shared_utility\/crt_abstractions.h/g' /home/travis/Arduino/libraries/AzureIoTHub/src/esp8266/azcpgmspace.h
+
+script:
+  - buildExampleSketch app
