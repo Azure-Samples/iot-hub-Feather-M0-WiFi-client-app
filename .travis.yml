@@ -20,7 +20,7 @@ before_install:
   - arduino --install-library NTPClient
   - git clone https://github.com/adafruit/Adafruit_WINC1500.git /home/travis/Arduino/libraries/Adafruit_WINC1500
   - buildExampleSketch() {
-      EXAMPLE_SKETCH=$PWD/examples/$1/$1.ino;
+      EXAMPLE_SKETCH=$PWD/$1/$1.ino;
 
       cat $EXAMPLE_SKETCH;
 
