@@ -15,9 +15,9 @@ before_install:
   - tar xf arduino-$IDE_VERSION-linux64.tar.xz
   - mv arduino-$IDE_VERSION $HOME/arduino-ide
   - export PATH=$PATH:$HOME/arduino-ide
-  - arduino --install-boards arduino:samd;
-  - arduino --install-library RTCZero;
-  - arduino --install-library NTPClient;
+  - arduino --install-boards arduino:samd
+  - arduino --install-library RTCZero
+  - arduino --install-library NTPClient
   - git clone https://github.com/adafruit/Adafruit_WINC1500.git /home/travis/Arduino/libraries/Adafruit_WINC1500  
   - buildExampleSketch() {
       EXAMPLE_SKETCH=$PWD/examples/$1/$1.ino;
