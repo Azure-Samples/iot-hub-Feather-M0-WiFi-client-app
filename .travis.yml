@@ -18,8 +18,8 @@ before_install:
   - arduino --pref "boardsmanager.additional.urls=https://adafruit.github.io/arduino-board-index/package_adafruit_index.json" --install-boards adafruit:samd
   - arduino --pref "boardsmanager.additional.urls=" --save-prefs
   - if [[ "$BOARD" =~ "adafruit:samd:" ]]; then
-    arduino --install-library RTCZero;
-  fi
+      arduino --install-library RTCZero;
+    fi
   - arduino --install-library RTCZero
   - arduino --install-library NTPClient
   - git clone https://github.com/adafruit/Adafruit_WINC1500.git /home/travis/Arduino/libraries/Adafruit_WINC1500
