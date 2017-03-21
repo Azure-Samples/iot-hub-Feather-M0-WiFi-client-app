@@ -11,6 +11,7 @@
 // If don't have a physical DHT sensor, can send simulated data to IoT hub
 #define SIMULATED_DATA false
 
+#define TEMPERATURE_ALERT 30
 
 // SSID and SSID password's length should < 32 bytes
 // http://serverfault.com/a/45509
