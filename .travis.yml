@@ -17,8 +17,7 @@ before_install:
   - export PATH=$PATH:$HOME/arduino-ide
   - arduino --pref "boardsmanager.additional.urls=https://adafruit.github.io/arduino-board-index/package_adafruit_index.json" --install-boards adafruit:samd
   - arduino --pref "boardsmanager.additional.urls=" --save-prefs
-  - arduino --install-library RTCZero
-  - arduino --install-library RTCZero
+  - git clone https://github.com/arduino-libraries/RTCZero.git /home/travis/Arduino/libraries/RTCZero
   - arduino --install-library NTPClient
   - git clone https://github.com/adafruit/Adafruit_WINC1500.git /home/travis/Arduino/libraries/Adafruit_WINC1500
   - buildExampleSketch() {
