@@ -12,6 +12,7 @@
 #include <time.h>
 #include <sys/time.h>
 #include <AzureIoTHub.h>
+#include <AzureIoTUtility.h>
 #include <AzureIoTProtocol_HTTP.h>
 #include <Wire.h>
 #include <SPI.h>
@@ -130,7 +131,7 @@ static void sendCallback(IOTHUB_CLIENT_CONFIRMATION_RESULT result, void *userCon
     messagePending = false;
 }
 
-static void sendMessage(IOTHUB_CLIENT_LL_HANDLE iotHubClientHandle, char *buffer)
+static void sendMessage(IOTHUB_CLIENT_LL_HANDLE iotHubClientHandle, char *buffer, bool temperatureAlert)
 {
     IOTHUB_MESSAGE_HANDLE messageHandle = IoTHubMessage_CreateFromByteArray((const unsigned char *)buffer, strlen(buffer));
     if (messageHandle == NULL)
@@ -139,6 +140,8 @@ static void sendMessage(IOTHUB_CLIENT_LL_HANDLE iotHubClientHandle, char *buffer
     }
     else
     {
+        MAP_HANDLE properties = IoTHubMessage_Properties(messageHandle);
+        Map_Add(properties, "temperatureAlert", temperatureAlert ? "true" : "false");
         LogInfo("Sending message: %s", buffer);
         if (IoTHubClient_LL_SendEventAsync(iotHubClientHandle, messageHandle, sendCallback, NULL) != IOTHUB_CLIENT_OK)
         {
@@ -217,7 +220,7 @@ float readHumidity()
 
 #endif
 
-void readMessage(int messageId, char *payload)
+bool readMessage(int messageId, char *payload)
 {
     float temperature = readTemperature();
     float humidity = readHumidity();
@@ -225,6 +228,7 @@ void readMessage(int messageId, char *payload)
     JsonObject &root = jsonBuffer.createObject();
     root["deviceId"] = DEVICE_ID;
     root["messageId"] = messageId;
+    bool result = false;
 
     // NAN is not the valid json, change it to NULL
     if (std::isnan(temperature))
@@ -234,6 +238,10 @@ void readMessage(int messageId, char *payload)
     else
     {
         root["temperature"] = temperature;
+        if(temperature > TEMPERATURE_ALERT)
+        {
+            result = true;
+        }
     }
 
     if (std::isnan(humidity))
@@ -245,6 +253,7 @@ void readMessage(int messageId, char *payload)
         root["humidity"] = humidity;
     }
     root.printTo(payload, MESSAGE_MAX_LEN);
+    return result;
 }
 
 void initSerial()
@@ -370,8 +379,8 @@ void loop()
     if (!messagePending)
     {
         char messagePayload[MESSAGE_MAX_LEN];
-        readMessage(messageCount, messagePayload);
-        sendMessage(iotHubClientHandle, messagePayload);
+        bool temperatureAlert = readMessage(messageCount, messagePayload);
+        sendMessage(iotHubClientHandle, messagePayload, temperatureAlert);
         messageCount++;
         delay(INTERVAL);
     }

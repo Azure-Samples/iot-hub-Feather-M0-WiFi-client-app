@@ -4,7 +4,7 @@
 language: generic
 env:
   global:
-    - IDE_VERSION=1.6.8
+    - IDE_VERSION=1.8.1
   matrix:
     - BOARD="adafruit:samd:adafruit_feather_m0"
 before_install:
@@ -15,9 +15,11 @@ before_install:
   - tar xf arduino-$IDE_VERSION-linux64.tar.xz
   - mv arduino-$IDE_VERSION $HOME/arduino-ide
   - export PATH=$PATH:$HOME/arduino-ide
-  - arduino --pref "boardsmanager.additional.urls=https://adafruit.github.io/arduino-board-index/package_adafruit_index.json" --install-boards adafruit:samd
+  - arduino --pref "boardsmanager.additional.urls=https://adafruit.github.io/arduino-board-index/package_adafruit_index.json" --save-prefs
+  - arduino --install-boards arduino:samd
+  - arduino --install-boards adafruit:samd
   - arduino --pref "boardsmanager.additional.urls=" --save-prefs
-  - git clone https://github.com/arduino-libraries/RTCZero.git /home/travis/Arduino/libraries/RTCZero
+  - arduino --install-library RTCZero
   - arduino --install-library NTPClient
   - git clone https://github.com/adafruit/Adafruit_WINC1500.git /home/travis/Arduino/libraries/Adafruit_WINC1500
   - buildExampleSketch() {
