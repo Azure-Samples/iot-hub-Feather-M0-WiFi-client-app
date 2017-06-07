@@ -102,7 +102,11 @@ static Adafruit_WINC1500SSLClient sslClient; // for Adafruit WINC1500
  * As a temporary solution, we will test the definition of AzureIoTHubVersion, which is only defined
  *    in the new AzureIoTHub library version. Once we totally deprecate the last version, we can take
  *    the #ifdef out.
+ * Break changes in version 1.0.34: AzureIoTHub library removed AzureIoTClient class.
+ * So we remove the code below to avoid compile error.
  */
+
+/*
 #ifdef AzureIoTHubVersion
 static AzureIoTHubClient iotHubClient;
 static void beginIoThubClient()
@@ -116,6 +120,7 @@ static void beginIoThubClient()
     iotHubClient.begin();
 }
 #endif
+*/
 
 static void sendCallback(IOTHUB_CLIENT_CONFIRMATION_RESULT result, void *userContextCallback)
 {
@@ -346,11 +351,18 @@ void setup()
 
     initSensor();
     // setup iot hub client which will diliver your message
+    
+    /*
+    * Break changes in version 1.0.34: AzureIoTHub library removed AzureIoTClient class.
+    * So we remove the code below to avoid compile error.
+    */
+
+    /*
     beginIoThubClient();
     struct timeval tv;
     gettimeofday(&tv, NULL);
     iotHubClient.setEpochTime(tv.tv_sec);
-
+    */
     iotHubClientHandle = IoTHubClient_LL_CreateFromConnectionString(connectionString, HTTP_Protocol);
     if (iotHubClientHandle == NULL)
     {
