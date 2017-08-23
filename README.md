@@ -1,3 +1,9 @@
+---
+services: iot-hub
+platforms: arduino
+author: xshi
+---
+
 # IoT Hub Feather M0 WiFi Client application
 [![Build Status](https://travis-ci.com/Azure-Samples/iot-hub-Feather-M0-WiFi-client-app.svg?token=5ZpmkzKtuWLEXMPjmJ6P&branch=master)](https://travis-ci.com/Azure-Samples/iot-hub-Feather-M0-WiFi-client-app) 
 
