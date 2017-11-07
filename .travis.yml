@@ -27,7 +27,7 @@ before_install:
       arduino --verbose-build --verify --board $BOARD $EXAMPLE_SKETCH;
     }
 install:
-  - arduino --install-library "AzureIoTUtility"
+  - arduino --install-library "AzureIoTUtility":1.0.34
   - arduino --install-library "AzureIoTHub"
   - arduino --install-library "AzureIoTProtocol_HTTP"
   - arduino --install-library "ArduinoJson"
