@@ -351,7 +351,7 @@ void setup()
 
     initSensor();
     // setup iot hub client which will diliver your message
-    
+
     /*
     * Break changes in version 1.0.34: AzureIoTHub library removed AzureIoTClient class.
     * So we remove the code below to avoid compile error.
@@ -367,8 +367,7 @@ void setup()
     if (iotHubClientHandle == NULL)
     {
         LogInfo("Failed on IoTHubClient_CreateFromConnectionString");
-        while (1)
-            ;
+        while (1);
     }
 
     // Because it can poll "after 2 seconds" polls will happen
@@ -382,6 +381,7 @@ void setup()
         LogInfo("failure to set option \"MinimumPollingTime\"\r\n");
     }
 
+    IoTHubClient_LL_SetOption(iotHubClientHandle, "product_info", "HappyPath_FeatherM0WiFi-C");
     IoTHubClient_LL_SetMessageCallback(iotHubClientHandle, receiveMessageCallback, NULL);
 }
 
