@@ -1,14 +1,10 @@
 ﻿// Copyright (c) Arduino. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-#ifdef ARDUINO_SAMD_FEATHER_M0
-#include <Adafruit_WINC1500.h>
-#include <Adafruit_WINC1500Udp.h>
-#elif defined(ARDUINO_SAMD_ZERO) || defined(ARDUINO_SAMD_MKR1000)
 #include <WiFi101.h>
 #include <WiFiUdp.h>
-#endif
-
+#include <stdio.h>
+#include <stdint.h>
 #ifndef NTPCLIENT_H
 #define NTPCLIENT_H
 
@@ -32,12 +28,7 @@ class NTPClient
         uint32_t parseResponse();
 
         char        _buffer[NTP_PACKET_SIZE];
-#ifdef ARDUINO_SAMD_FEATHER_M0
-        Adafruit_WINC1500UDP     _udp;
-#elif defined(ARDUINO_SAMD_ZERO) || defined(ARDUINO_SAMD_MKR1000)
         WiFiUDP     _udp;
-#endif
-
 };
 
 #endif
