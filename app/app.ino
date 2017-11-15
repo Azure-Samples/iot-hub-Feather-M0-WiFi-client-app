@@ -39,14 +39,13 @@ void initWifi()
     //Configure pins for Adafruit ATWINC1500 Feather
     WiFi.setPins(8,7,4,2);
     // Connect to WPA/WPA2 network. Change this line if using open or WEP network:
-    int status = WiFi.begin(ssid, pass);
 
-    while (status != WL_CONNECTED)
+    while (WiFi.begin(ssid, pass) != WL_CONNECTED)
     {
         // Get Mac Address and show it.
         // WiFi.macAddress(mac) save the mac address into a six length array, but the endian may be different. The M0 WiFi board should
         // start from mac[5] to mac[0], but some other kinds of board run in the oppsite direction.
-        uint8_t  mac[6];
+        uint8_t mac[6];
         WiFi.macAddress(mac);
         LogInfo("You device with MAC address %02x:%02x:%02x:%02x:%02x:%02x connects to %s failed! Waiting 10 seconds to retry.",
                 mac[5], mac[4], mac[3], mac[2], mac[1], mac[0], ssid);
