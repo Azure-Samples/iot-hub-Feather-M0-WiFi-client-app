@@ -1,11 +1,7 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-#include <Adafruit_WINC1500.h>
-#include <Adafruit_WINC1500Client.h>
-#include <Adafruit_WINC1500Server.h>
-#include <Adafruit_WINC1500SSLClient.h>
-#include <Adafruit_WINC1500Udp.h>
+
 #include <Adafruit_Sensor.h>
 #include <ArduinoJson.h>
 #include <Adafruit_BME280.h>
@@ -34,23 +30,23 @@ void blinkLED()
     digitalWrite(LED_PIN, LOW);
 }
 
-// Setup the WINC1500 connection with the pins above and the default hardware SPI.
-Adafruit_WINC1500 WiFi(WINC_CS, WINC_IRQ, WINC_RST);
 
 void initWifi()
 {
     // Attempt to connect to Wifi network:
     LogInfo("Attempting to connect to SSID: %s", ssid);
 
+    //Configure pins for Adafruit ATWINC1500 Feather
+    WiFi.setPins(8,7,4,2);
     // Connect to WPA/WPA2 network. Change this line if using open or WEP network:
-    WiFi.begin(ssid, pass);
+    int status = WiFi.begin(ssid, pass);
 
-    while (WiFi.status() != WL_CONNECTED)
+    while (status != WL_CONNECTED)
     {
         // Get Mac Address and show it.
         // WiFi.macAddress(mac) save the mac address into a six length array, but the endian may be different. The M0 WiFi board should
         // start from mac[5] to mac[0], but some other kinds of board run in the oppsite direction.
-        uint8_t mac[6];
+        uint8_t  mac[6];
         WiFi.macAddress(mac);
         LogInfo("You device with MAC address %02x:%02x:%02x:%02x:%02x:%02x connects to %s failed! Waiting 10 seconds to retry.",
                 mac[5], mac[4], mac[3], mac[2], mac[1], mac[0], ssid);
@@ -63,7 +59,7 @@ void initWifi()
 
 void initTime()
 {
-    Adafruit_WINC1500UDP _udp;
+    WiFiUDP _udp;
 
     time_t epochTime = (time_t)-1;
 
@@ -94,33 +90,6 @@ void initTime()
 
     settimeofday(&tv, NULL);
 }
-
-static Adafruit_WINC1500SSLClient sslClient; // for Adafruit WINC1500
-
-/*
- * The new version of AzureIoTHub library change the AzureIoTHubClient signature.
- * As a temporary solution, we will test the definition of AzureIoTHubVersion, which is only defined
- *    in the new AzureIoTHub library version. Once we totally deprecate the last version, we can take
- *    the #ifdef out.
- * Break changes in version 1.0.34: AzureIoTHub library removed AzureIoTClient class.
- * So we remove the code below to avoid compile error.
- */
-
-/*
-#ifdef AzureIoTHubVersion
-static AzureIoTHubClient iotHubClient;
-static void beginIoThubClient()
-{
-    iotHubClient.begin(sslClient);
-}
-#else
-static AzureIoTHubClient iotHubClient(sslClient);
-static void beginIoThubClient()
-{
-    iotHubClient.begin();
-}
-#endif
-*/
 
 static void sendCallback(IOTHUB_CLIENT_CONFIRMATION_RESULT result, void *userContextCallback)
 {
